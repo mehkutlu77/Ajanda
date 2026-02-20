@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Elite Renkli Ajanda - Pro</title>
+    <style>
+        :root {
+            --bg: #F4F7F9; --card: #FFFFFF; --text: #2D3436; --line: #CBD5E0;
+            --pzt: #FFEBEE; --sal: #E3F2FD; --car: #F1F8E9; --per: #FFF3E0; --cum: #F3E5F5; --cmt: #E0F7FA; --paz: #FFFDE7;
+            --pzt-b: #EF5350; --sal-b: #42A5F5; --car-b: #9CCC65; --per-b: #FFB74D; --cum-b: #AB47BC; --cmt-b: #26C6DA; --paz-b: #FBC02D;
+        }
+
+        [data-theme="dark"] {
+            --bg: #1A202C; --card: #2D3748; --text: #F7FAFC; --line: #4A5568;
+            --pzt: #442727; --sal: #233044; --car: #223020; --per: #443320; --cum: #332344; --cmt: #203344; --paz: #444420;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg); color: var(--text); display: flex; justify-content: center; transition: 0.3s; }
+
+        .app-wrapper, .modal-inner { width: 100vw; max-width: 450px; padding: 15px; height: 100vh; display: flex; flex-direction: column; }
+
+        .wordart { font-size: 28px; font-weight: 900; background: linear-gradient(#3B82F6, #1D4ED8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; }
+        .app-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+        .today-banner { text-align: center; font-size: 13px; font-weight: 800; color: #1D4ED8; margin-top: -5px; }
+        .circle-btn { width: 40px; height: 40px; border-radius: 12px; border: none; background: var(--card); color: var(--text); box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; font-size: 18px; }
+
+        .nav-control { background: var(--card); border-radius: 30px; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .arrow-btn { background: rgba(0,0,0,0.05); color: var(--text); border: none; padding: 8px 15px; border-radius: 15px; cursor: pointer; font-weight: bold; }
+
+        .week-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; flex: 1; }
+        .pazar-card { grid-column: span 2 !important; }
+
+        .day-card {
+            background: var(--card); border-radius: 18px; padding: 12px;
+            min-height: 115px; border-left: 8px solid var(--line);
+            display: flex; flex-direction: column; box-shadow: 0 4px 12px rgba(0,0,0,0.03); transition: 0.2s;
+        }
+        .is-today { border: 3px solid #1D4ED8 !important; box-shadow: 0 0 15px rgba(29, 78, 216, 0.4) !important; transform: scale(1.02); z-index: 5; }
+        .d-num { font-size: 24px; font-weight: 900; }
+        .d-name { font-size: 11px; font-weight: 700; opacity: 0.6; text-transform: uppercase; }
+        .d-line { border-bottom: 1px solid var(--line); height: 22px; outline: none; font-size: 12px; line-height: 22px; overflow: hidden; }
+
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(5px); display: none; z-index: 1000; justify-content: center; align-items: center; }
+        
+        .modal-content { 
+            width: 90vw; max-width: 400px; height: 80vh; background: var(--card); border-radius: 25px; 
+            display: flex; flex-direction: column; border-left: 15px solid var(--line); box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+        .modal-header { padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--line); }
+        .date-badge-box { background: #f1f5f9; padding: 8px 15px; border-radius: 12px; border: 1px solid var(--line); }
+        #modalFullHeader { font-size: 14px; font-weight: 800; color: #1D4ED8; }
+        
+        .header-action-btn { background: #1D4ED8; color: white; border: none; padding: 8px 12px; border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer; }
+        .back-btn { background: #64748b; }
+
+        .notebook-full-page { 
+            flex: 1; padding: 10px 20px; outline: none; margin: 15px; border-radius: 15px;
+            background: linear-gradient(transparent 34px, var(--line) 35px);
+            background-size: 100% 35px; line-height: 35px; font-size: 16px; overflow-y: auto; 
+            border: 1px solid var(--line);
+        }
+
+        .quick-panel { background: var(--card); border-radius: 25px; padding: 25px; display: flex; flex-direction: column; gap: 15px; width: 90vw; max-width: 400px; color: var(--text); }
+        .panel-header-btn { background: #1D4ED8; color: white; padding: 10px; border-radius: 10px; text-align: center; font-weight: 800; }
+        .form-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+        .form-grid input, .form-grid select { padding: 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--text); font-size: 14px; flex: 1; min-width: 45%; }
+        .full-w { min-width: 100% !important; }
+        
+        .check-row-fixed { display: flex; width: 100%; gap: 10px; }
+        .opt-label { flex: 1; background: #f1f5f9; padding: 12px; border-radius: 10px; display: flex; align-items: center; justify-content: center; gap: 5px; font-size: 12px; font-weight: 700; cursor: pointer; }
+
+        .primary-btn { background: #1D4ED8; color: white; border: none; padding: 15px; border-radius: 12px; font-weight: 800; cursor: pointer; }
+        .cancel-btn { background: transparent; color: #cc0000; border: none; padding: 5px; font-weight: 900; font-size: 16px; cursor: pointer; text-decoration: underline; }
+
+        .master-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .master-table tr:hover { background: rgba(0,0,0,0.02); }
+        .master-table td { padding: 12px 8px; border-bottom: 1px solid #f1f5f9; font-size: 13px; cursor: default; }
+        .dot-icon { cursor: pointer; font-size: 16px; display: inline-block; width: 25px; }
+        .tag-repeat { font-size: 10px; background: #E3F2FD; color: #1D4ED8; padding: 2px 5px; border-radius: 5px; margin-left: 5px; }
+
+        /* Gün Renkleri */
+        .day-0 { background: var(--pzt); border-left-color: var(--pzt-b); }
+        .day-1 { background: var(--sal); border-left-color: var(--sal-b); }
+        .day-2 { background: var(--car); border-left-color: var(--car-b); }
+        .day-3 { background: var(--per); border-left-color: var(--per-b); }
+        .day-4 { background: var(--cum); border-left-color: var(--cum-b); }
+        .day-5 { background: var(--cmt); border-left-color: var(--cmt-b); }
+        .day-6 { background: var(--paz); border-left-color: var(--paz-b); }
+    </style>
+</head>
+<body data-theme="light">
+
+    <div class="app-wrapper">
+        <header class="app-header">
+            <div class="wordart-container">
+                <h1 class="wordart">Hafta Planı</h1>
+                <div id="todayBanner" class="today-banner"></div>
+            </div>
+            <div class="header-btns">
+                <button id="themeToggle" class="circle-btn">🌓</button>
+                <button id="masterListBtn" class="circle-btn">📊</button>
+                <button id="quickAddBtn" class="circle-btn">🔔</button>
+            </div>
+        </header>
+
+        <nav class="nav-control">
+            <button id="prevWeek" class="arrow-btn">❮</button>
+            <div id="dateDisplay" class="date-range">...</div>
+            <button id="nextWeek" class="arrow-btn">❯</button>
+        </nav>
+
+        <main class="week-grid" id="weekGrid"></main>
+    </div>
+
+    <div id="dayModal" class="modal">
+        <div class="modal-content" id="modalFrame">
+            <header class="modal-header">
+                <button class="header-action-btn back-btn" onclick="closeAllModals()">❮ GERİ</button>
+                <div class="date-badge-box"><h2 id="modalFullHeader"></h2></div>
+                <button id="saveDayBtn" class="header-action-btn">KAYDET ✓</button>
+            </header>
+            <div class="notebook-full-page" id="modalLines" contenteditable="true"></div>
+        </div>
+    </div>
+
+    <div id="quickAddModal" class="modal">
+        <div class="quick-panel">
+            <div class="panel-header-btn">🔔 Yeni Etkinlik & Alarm</div>
+            <div class="form-grid">
+                <input type="date" id="qaDate">
+                <input type="time" id="qaTime">
+                <input type="text" id="qaText" placeholder="Etkinlik adı..." class="full-w">
+                <select id="qaImportance" class="full-w">
+                    <option value="⚪">⚪ Düşük</option>
+                    <option value="🟡">🟡 Orta</option>
+                    <option value="🔴">🔴 Acil</option>
+                </select>
+                <div class="check-row-fixed">
+                    <label class="opt-label"><input type="checkbox" id="qaAlarm"> Alarm</label>
+                    <label class="opt-label"><input type="checkbox" id="qaRepeat"> Her Hafta</label>
+                </div>
+            </div>
+            <button id="qaSaveBtn" class="primary-btn">TAKVİME İŞLE</button>
+            <button class="cancel-btn" onclick="closeAllModals()">VAZGEÇ</button>
+        </div>
+    </div>
+
+    <div id="masterListModal" class="modal">
+        <div class="modal-content" style="border-left-color: #1D4ED8;">
+            <header class="modal-header">
+                <span style="font-weight:900;">📊 PLANLI ETKİNLİKLER</span>
+                <button class="header-action-btn back-btn" onclick="closeAllModals()">KAPAT</button>
+            </header>
+            <div class="notebook-full-page">
+                <p id="emptyListMsg" style="text-align:center; font-size:12px; opacity:0.5; margin-top:20px; display:none;">Henüz planlanmış bir etkinlik yok.</p>
+                <table class="master-table">
+                    <tbody id="masterListContent"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <audio id="alarmSound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
+
+    <script>
+        // Tarih kaymasını önlemek için ISO düzeltici
+        const toLocalISO = (date) => {
+            const offset = date.getTimezoneOffset();
+            const adjustedDate = new Date(date.getTime() - (offset * 60 * 1000));
+            return adjustedDate.toISOString().split('T')[0];
+        };
+
+        let currentWeekStart = new Date();
+        const setMon = (date) => {
+            let day = date.getDay();
+            let diff = date.getDate() - day + (day === 0 ? -6 : 1);
+            date.setDate(diff);
+        };
+        setMon(currentWeekStart);
+
+        // Veri Kalıcılığı vPRO
+        let agenda = JSON.parse(localStorage.getItem('elite_vPRO')) || { events: [], recurring: {} };
+        let activeKey = null;
+
+        const trDays = ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi', 'Pazar'];
+        const trMonths = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateBanner();
+            renderUI();
+            setupEvents();
+            setInterval(checkAlarms, 30000);
+        });
+
+        function updateBanner() {
+            const d = new Date();
+            document.getElementById('todayBanner').innerText = `${d.getDate()} ${trMonths[d.getMonth()]} ${d.getFullYear()} ${trDays[d.getDay() === 0 ? 6 : d.getDay()-1]}`;
+        }
+
+        function renderUI() {
+            const grid = document.getElementById('weekGrid');
+            grid.innerHTML = '';
+            const todayStr = toLocalISO(new Date());
+            document.getElementById('dateDisplay').innerText = `${trMonths[currentWeekStart.getMonth()]} ${currentWeekStart.getFullYear()}`;
+
+            for (let i = 0; i < 7; i++) {
+                let d = new Date(currentWeekStart);
+                d.setDate(currentWeekStart.getDate() + i);
+                let key = toLocalISO(d);
+                
+                let single = agenda[key] || "";
+                let dayIdx = d.getDay() === 0 ? 6 : d.getDay() - 1;
+                let rec = (agenda.recurring && agenda.recurring[dayIdx]) ? agenda.recurring[dayIdx] : "";
+                let combined = (single + "\n" + rec).trim().split('\n');
+
+                const card = document.createElement('div');
+                card.className = `day-card day-${i} ${i === 6 ? 'pazar-card' : ''} ${key === todayStr ? 'is-today' : ''}`;
+                card.innerHTML = `
+                    <div class="d-head" onclick="openDay('${key}', ${i})">
+                        <div class="d-num">${d.getDate()}</div>
+                        <div class="d-name">${trDays[i]}</div>
+                    </div>
+                    <div class="d-body">
+                        ${[0,1,2,3].map(idx => `<div class="d-line" contenteditable="true" onblur="saveQuick('${key}', this)">${combined[idx] || ''}</div>`).join('')}
+                    </div>
+                `;
+                grid.appendChild(card);
+            }
+        }
+
+        function openDay(key, dayIdx) {
+            activeKey = key;
+            const d = new Date(key);
+            document.getElementById('modalFrame').className = `modal-content day-${dayIdx}`;
+            document.getElementById('modalFullHeader').innerText = `${d.getDate()} ${trMonths[d.getMonth()]} ${trDays[dayIdx]}`;
+            document.getElementById('modalLines').innerText = (agenda[key] || "").trim();
+            document.getElementById('dayModal').style.display = 'flex';
+        }
+
+        function setupEvents() {
+            document.getElementById('themeToggle').onclick = () => document.body.setAttribute('data-theme', document.body.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
+            document.getElementById('prevWeek').onclick = () => { currentWeekStart.setDate(currentWeekStart.getDate() - 7); renderUI(); };
+            document.getElementById('nextWeek').onclick = () => { currentWeekStart.setDate(currentWeekStart.getDate() + 7); renderUI(); };
+            document.getElementById('saveDayBtn').onclick = () => {
+                agenda[activeKey] = document.getElementById('modalLines').innerText;
+                save(); renderUI(); closeAllModals();
+            };
+
+            document.getElementById('quickAddBtn').onclick = () => {
+                document.getElementById('qaDate').value = toLocalISO(new Date());
+                document.getElementById('quickAddModal').style.display = 'flex';
+            }
+            
+            document.getElementById('qaSaveBtn').onclick = () => {
+                const date = document.getElementById('qaDate').value;
+                const time = document.getElementById('qaTime').value;
+                const text = document.getElementById('qaText').value;
+                const imp = document.getElementById('qaImportance').value;
+                const repeat = document.getElementById('qaRepeat').checked;
+                const alarm = document.getElementById('qaAlarm').checked;
+                if(!date || !text) return;
+
+                // Resmi etkinlik listesine ekle
+                agenda.events.push({
+                    id: Date.now(),
+                    date, time, text, imp, repeat, alarm, fired: false
+                });
+                
+                save(); renderUI(); closeAllModals();
+            };
+
+            document.getElementById('masterListBtn').onclick = renderMasterList;
+        }
+
+        function renderMasterList() {
+            const container = document.getElementById('masterListContent');
+            const emptyMsg = document.getElementById('emptyListMsg');
+            container.innerHTML = "";
+            
+            let planliEtkinlikler = [...agenda.events];
+
+            if(planliEtkinlikler.length === 0) {
+                emptyMsg.style.display = 'block';
+            } else {
+                emptyMsg.style.display = 'none';
+                planliEtkinlikler.sort((a,b) => a.date.localeCompare(b.date) || a.time.localeCompare(b.time));
+
+                planliEtkinlikler.forEach((ev, idx) => {
+                    let tr = document.createElement('tr');
+                    let d = new Date(ev.date);
+                    let dateLabel = ev.repeat ? `Her ${trDays[d.getDay() === 0 ? 6 : d.getDay()-1]}` : ev.date;
+                    tr.innerHTML = `
+                        <td style="width:30px;"><span class="dot-icon" onclick="manageEntry(${ev.id})">${ev.imp || '⚪'}</span></td>
+                        <td style="white-space:nowrap;"><b>${dateLabel}</b></td>
+                        <td>${ev.time} - ${ev.text} ${ev.repeat ? '<span class="tag-repeat">Tekrar</span>' : ''}</td>
+                    `;
+                    container.appendChild(tr);
+                });
+            }
+            document.getElementById('masterListModal').style.display = 'flex';
+        }
+
+        function manageEntry(id) {
+            const idx = agenda.events.findIndex(e => e.id === id);
+            const ev = agenda.events[idx];
+            const action = confirm(`ETKİNLİK: ${ev.text}\n\nSilmek için 'Tamam', metni düzeltmek için 'İptal' diyerek yeni ismi girin.`);
+            
+            if(action) {
+                agenda.events.splice(idx, 1);
+            } else {
+                const newTitle = prompt("Yeni etkinlik ismini girin:", ev.text);
+                if(newTitle) agenda.events[idx].text = newTitle;
+            }
+            save(); renderUI(); renderMasterList();
+        }
+
+        function checkAlarms() {
+            const now = new Date();
+            const curDate = toLocalISO(now);
+            const curTime = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
+            const curDayIdx = now.getDay() === 0 ? 6 : now.getDay() - 1;
+
+            agenda.events.forEach(ev => {
+                if(!ev.alarm) return;
+                const evD = new Date(ev.date);
+                const evDayIdx = evD.getDay() === 0 ? 6 : evD.getDay() - 1;
+                let ring = ev.repeat ? (curDayIdx === evDayIdx && curTime === ev.time) : (ev.date === curDate && curTime === ev.time);
+                
+                if(ring && !ev.fired) {
+                    document.getElementById('alarmSound').play();
+                    alert(`VAKİT GELDİ: ${ev.text}`);
+                    ev.fired = true;
+                    setTimeout(() => ev.fired = false, 61000);
+                }
+            });
+        }
+
+        function closeAllModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
+        function save() { localStorage.setItem('elite_vPRO', JSON.stringify(agenda)); }
+        function saveQuick(key, el) {
+            const cardLines = el.closest('.d-body').querySelectorAll('.d-line');
+            agenda[key] = Array.from(cardLines).map(l => l.innerText).join('\n').trim();
+            save();
+        }
+    </script>
+</body>
+</html>
