@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Elite Renkli Ajanda - Pro</title>
+    <title>Elite Renkli Ajanda - Pro v2026</title>
     <style>
         :root {
             --bg: #F4F7F9; --card: #FFFFFF; --text: #2D3436; --line: #CBD5E0;
@@ -17,62 +17,50 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg); color: var(--text); display: flex; justify-content: center; height: 100vh; overflow: hidden; }
+        body { background: var(--bg); color: var(--text); display: flex; justify-content: center; height: 100vh; overflow: hidden; transition: 0.3s; }
 
-        .app-wrapper { width: 100vw; max-width: 450px; padding: 12px; height: 100vh; display: flex; flex-direction: column; }
+        .app-wrapper { width: 100vw; max-width: 450px; padding: 12px; height: 100vh; display: flex; flex-direction: column; position: relative; }
 
-        .wordart { font-size: 28px; font-weight: 900; background: linear-gradient(#3B82F6, #1D4ED8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; }
-        .app-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
-        .today-banner { text-align: center; font-size: 13px; font-weight: 800; color: #1D4ED8; margin-top: -5px; }
+        .wordart { font-size: 32px; font-weight: 900; background: linear-gradient(#3B82F6, #1D4ED8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; }
+        .today-banner { text-align: center; font-size: 18px; font-weight: 800; color: #1D4ED8; margin: 5px 0 10px 0; }
         
-        .circle-btn { width: 40px; height: 40px; border-radius: 12px; border: none; background: var(--card); color: var(--text); box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; font-size: 18px; }
+        .circle-btn { width: 40px; height: 40px; border-radius: 12px; border: none; background: var(--card); color: var(--text); box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; }
 
-        .nav-control { background: var(--card); border-radius: 30px; padding: 8px 18px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        .arrow-btn { background: rgba(0,0,0,0.05); color: var(--text); border: none; padding: 6px 12px; border-radius: 15px; cursor: pointer; font-weight: bold; }
+        /* YAN PANEL */
+        .side-panel { position: absolute; right: -320px; top: 0; width: 300px; height: 100%; background: var(--bg); z-index: 2000; box-shadow: -5px 0 20px rgba(0,0,0,0.2); transition: 0.4s; padding: 20px; display: flex; flex-direction: column; border-left: 10px solid #1D4ED8; }
+        .side-panel.active { right: 0; }
+        .panel-close { position: absolute; left: -45px; top: 20px; background: #1D4ED8; color: white; border: none; width: 45px; height: 45px; border-radius: 12px 0 0 12px; cursor: pointer; font-size: 20px; }
 
-        .week-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; flex: 1; margin-bottom: 5px; }
+        .profile-card { background: var(--card); border-radius: 20px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; border-bottom: 5px solid #1D4ED8; }
+        .profile-img { width: 90px; height: 90px; border-radius: 50%; background: #eee; margin: 0 auto 15px; display: block; object-fit: cover; border: 4px solid #1D4ED8; cursor: pointer; }
+        .prof-input { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--text); font-size: 14px; }
+
+        .nav-control { background: var(--card); border-radius: 30px; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .arrow-btn { background: rgba(0,0,0,0.05); color: var(--text); border: none; padding: 8px 15px; border-radius: 15px; cursor: pointer; font-weight: bold; }
+
+        .week-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; flex: 1; margin-bottom: 5px; overflow-y: auto; }
         .pazar-card { grid-column: span 2 !important; }
 
-        .day-card {
-            background: var(--card); border-radius: 18px; padding: 8px 12px;
-            min-height: 85px; 
-            border-left: 8px solid var(--line);
-            display: flex; flex-direction: column; box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-            overflow: hidden;
-        }
+        .day-card { background: var(--card); border-radius: 20px; padding: 12px; min-height: 125px; border-left: 8px solid var(--line); display: flex; flex-direction: column; box-shadow: 0 4px 12px rgba(0,0,0,0.03); position: relative; }
+        .is-today { border: 3px solid #1D4ED8 !important; }
+        .d-num { font-size: 26px; font-weight: 900; line-height: 1; }
+        .d-name { font-size: 11px; font-weight: 700; opacity: 0.7; text-transform: uppercase; margin-bottom: 5px; }
         
-        .is-today { border: 3px solid #1D4ED8 !important; box-shadow: 0 0 12px rgba(29, 78, 216, 0.4) !important; z-index: 5; }
-        
-        .d-num { font-size: 22px; font-weight: 900; line-height: 1; }
-        .d-name { font-size: 10px; font-weight: 700; opacity: 0.6; text-transform: uppercase; }
-        
-        .d-body { flex: 1; margin-top: 4px; }
-        
-        .d-line { 
-            border-bottom: 1px solid var(--line); height: 19px; outline: none; 
-            font-size: 11px; line-height: 19px; overflow: hidden; white-space: nowrap; 
-            text-overflow: ellipsis;
-        }
+        .day-event-item { font-size: 11px; font-weight: 700; background: rgba(29, 78, 216, 0.1); color: #1D4ED8; padding: 3px 6px; border-radius: 4px; margin-bottom: 2px; display: flex; align-items: center; gap: 4px; border-left: 3px solid #1D4ED8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .not-lines { flex: 1; background: linear-gradient(transparent 23px, var(--line) 24px); background-size: 100% 24px; line-height: 24px; font-size: 13px; outline: none; min-height: 48px; overflow: hidden; margin-top: 5px; }
 
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(5px); display: none; z-index: 1000; justify-content: center; align-items: center; }
-        .modal-content { width: 90vw; max-width: 400px; height: 80vh; background: var(--card); border-radius: 25px; display: flex; flex-direction: column; border-left: 15px solid var(--line); }
-        .modal-header { padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--line); }
+        /* Modallar */
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); display: none; z-index: 3000; justify-content: center; align-items: center; }
+        .modal-content { width: 95vw; max-width: 420px; height: 85vh; background: var(--card); border-radius: 30px; display: flex; flex-direction: column; border-left: 15px solid var(--line); overflow: hidden; }
+        .modal-header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--line); }
+        .notebook-page { flex: 1; padding: 25px; outline: none; background: linear-gradient(transparent 34px, var(--line) 35px); background-size: 100% 35px; line-height: 35px; font-size: 17px; overflow-y: auto; white-space: pre-wrap; }
+
+        /* Alarm Bildirim Ekranı */
+        #alarmOverlay { position: fixed; inset: 0; background: rgba(29, 78, 216, 0.95); z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; color: white; text-align: center; padding: 20px; animation: pulseBg 2s infinite; }
+        @keyframes pulseBg { 0% { background: rgba(29, 78, 216, 0.95); } 50% { background: rgba(171, 71, 188, 0.95); } 100% { background: rgba(29, 78, 216, 0.95); } }
+        .alarm-icon { font-size: 80px; margin-bottom: 20px; }
         
-        /* GÜN GEÇİŞ BUTONLARI CSS */
-        .day-nav-wrapper { display: flex; align-items: center; gap: 10px; }
-        .nav-modal-btn { background: #f1f5f9; border: none; width: 32px; height: 32px; border-radius: 10px; cursor: pointer; color: #1D4ED8; font-weight: bold; }
-
-        .notebook-full-page { flex: 1; padding: 10px 20px; outline: none; margin: 15px; border-radius: 15px; background: linear-gradient(transparent 34px, var(--line) 35px); background-size: 100% 35px; line-height: 35px; font-size: 16px; overflow-y: auto; border: 1px solid var(--line); }
-
-        .quick-panel { background: var(--card); border-radius: 25px; padding: 25px; display: flex; flex-direction: column; gap: 15px; width: 90vw; max-width: 400px; }
-        .form-grid { display: flex; flex-wrap: wrap; gap: 10px; }
-        .form-grid input, .form-grid select { padding: 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--text); flex: 1; min-width: 45%; }
-        .full-w { min-width: 100% !important; }
-        .check-row-fixed { display: flex; width: 100%; gap: 10px; }
-        .opt-label { flex: 1; background: #f1f5f9; padding: 12px; border-radius: 10px; display: flex; align-items: center; justify-content: center; gap: 5px; font-size: 12px; font-weight: 700; cursor: pointer; }
-
-        .primary-btn { background: #1D4ED8; color: white; border: none; padding: 15px; border-radius: 12px; font-weight: 800; cursor: pointer; }
-        .cancel-btn { background: transparent; color: #cc0000; border: none; padding: 5px; font-weight: 900; font-size: 16px; cursor: pointer; text-decoration: underline; }
+        .primary-btn { background: #1D4ED8; color: white; border: none; padding: 14px; border-radius: 12px; font-weight: 800; cursor: pointer; width: 100%; }
 
         .day-0 { background: var(--pzt); border-left-color: var(--pzt-b); }
         .day-1 { background: var(--sal); border-left-color: var(--sal-b); }
@@ -81,235 +69,203 @@
         .day-4 { background: var(--cum); border-left-color: var(--cum-b); }
         .day-5 { background: var(--cmt); border-left-color: var(--cmt-b); }
         .day-6 { background: var(--paz); border-left-color: var(--paz-b); }
-
-        .master-table { width: 100%; border-collapse: collapse; }
-        .master-table td { padding: 12px 8px; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
     </style>
 </head>
 <body data-theme="light">
 
+    <div id="alarmOverlay">
+        <div class="alarm-icon">🔔</div>
+        <h1 style="font-size: 40px; margin-bottom: 10px;">HATIRLATICI!</h1>
+        <div id="alarmInfo" style="font-size: 24px; font-weight: bold; margin-bottom: 30px;">Etkinlik Adı - 12:00</div>
+        <button onclick="stopAlarm()" class="primary-btn" style="background: white; color: #1D4ED8; width: 200px; font-size: 20px;">TAMAM</button>
+        <audio id="alarmAudio" loop src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"></audio>
+    </div>
+
+    <div id="sidePanel" class="side-panel">
+        <button class="panel-close" onclick="togglePanel()">👤</button>
+        <h2 class="wordart" style="font-size: 24px; margin-bottom: 20px;">Profilim</h2>
+        <div class="profile-card">
+            <label for="profPicInput"><img id="profImg" src="https://via.placeholder.com/100" class="profile-img"></label>
+            <input type="file" id="profPicInput" style="display:none" onchange="loadProfilePic(event)">
+            <input type="text" id="profName" class="prof-input" placeholder="Ad Soyad">
+            <input type="text" id="profPhone" class="prof-input" placeholder="Telefon">
+            <input type="email" id="profEmail" class="prof-input" placeholder="E-posta">
+            <textarea id="profBio" class="prof-input" style="height:80px;" placeholder="Notlar..."></textarea>
+            <button class="primary-btn" onclick="saveProfile()" style="padding:10px;">GÜNCELLE</button>
+        </div>
+        <button onclick="handleLogout()" style="width:100%; border:none; background:none; color:#cc0000; font-weight:bold; cursor:pointer; text-decoration:underline;">Oturumu Kapat</button>
+    </div>
+
     <div class="app-wrapper">
-        <header class="app-header">
-            <div>
-                <h1 class="wordart">Hafta Planı</h1>
-                <div id="todayBanner" class="today-banner"></div>
-            </div>
-            <div class="header-btns">
+        <header class="app-header" style="display:flex; justify-content:space-between; align-items:center;">
+            <h1 class="wordart">Hafta Planı</h1>
+            <div style="display:flex; gap:8px;">
                 <button id="themeToggle" class="circle-btn">🌓</button>
+                <button onclick="togglePanel()" class="circle-btn">⚙️</button>
                 <button id="masterListBtn" class="circle-btn">📊</button>
                 <button id="quickAddBtn" class="circle-btn">🔔</button>
             </div>
         </header>
-
+        <div id="todayBanner" class="today-banner"></div>
         <nav class="nav-control">
             <button id="prevWeek" class="arrow-btn">❮</button>
-            <div id="dateDisplay" style="font-weight: 800; font-size: 14px;">...</div>
+            <div id="dateDisplay" style="font-weight: 900; color:#1D4ED8;">Şubat 2026</div>
             <button id="nextWeek" class="arrow-btn">❯</button>
         </nav>
-
         <main class="week-grid" id="weekGrid"></main>
     </div>
 
     <div id="dayModal" class="modal">
         <div class="modal-content" id="modalFrame">
             <header class="modal-header">
-                <button class="cancel-btn" style="font-size:12px;" onclick="closeAllModals()">İPTAL</button>
-                <div class="day-nav-wrapper">
-                    <button class="nav-modal-btn" onclick="changeDay(-1)">❮</button>
-                    <h2 id="modalFullHeader" style="font-size:14px; font-weight: 800; color: #1D4ED8; min-width: 100px; text-align: center;"></h2>
-                    <button class="nav-modal-btn" onclick="changeDay(1)">❯</button>
-                </div>
-                <button id="saveDayBtn" class="primary-btn" style="padding:5px 15px;">KAYDET</button>
+                <button class="arrow-btn" style="color:red;" onclick="closeAllModals()">KAPAT</button>
+                <div style="display:flex; gap:10px;"><button onclick="changeDay(-1)" class="arrow-btn">❮</button><h2 id="modalFullHeader" style="font-size:16px;"></h2><button onclick="changeDay(1)" class="arrow-btn">❯</button></div>
+                <button id="saveDayBtn" class="primary-btn" style="width:auto; padding:5px 15px;">KAYDET</button>
             </header>
-            <div class="notebook-full-page" id="modalLines" contenteditable="true"></div>
+            <div class="notebook-page" id="modalLines" contenteditable="true"></div>
         </div>
     </div>
 
     <div id="quickAddModal" class="modal">
-        <div class="quick-panel">
-            <div style="background:#1D4ED8; color:white; padding:10px; border-radius:10px; text-align:center; font-weight:800;">🔔 Yeni Etkinlik & Alarm</div>
-            <div class="form-grid">
-                <input type="date" id="qaDate">
-                <input type="time" id="qaTime">
-                <input type="text" id="qaText" placeholder="Etkinlik adı..." class="full-w">
-                <select id="qaImportance" class="full-w">
-                    <option value="⚪">⚪ Düşük</option>
-                    <option value="🟡">🟡 Orta</option>
-                    <option value="🔴">🔴 Acil</option>
-                </select>
-                <div class="check-row-fixed">
-                    <label class="opt-label"><input type="checkbox" id="qaAlarm" checked> Alarm</label>
-                    <label class="opt-label"><input type="checkbox" id="qaRepeat"> Her Hafta</label>
+        <div class="modal-content" style="height:auto; border-left:10px solid #1D4ED8; padding-bottom:20px;">
+            <div style="background:#1D4ED8; color:white; padding:15px; text-align:center; font-weight:800;">🔔 Yeni Etkinlik & Alarm</div>
+            <div style="padding:15px;">
+                <input type="date" id="qaDate" class="prof-input">
+                <input type="time" id="qaTime" class="prof-input">
+                <div style="display:flex; gap:5px; margin-bottom:10px;">
+                    <button onclick="openIconPicker()" id="selectedIcon" class="circle-btn" style="min-width:50px;">📅</button>
+                    <input type="text" id="qaText" class="prof-input" style="margin-bottom:0; flex:1;" placeholder="Etkinlik adı...">
                 </div>
-            </div>
-            <button id="qaSaveBtn" class="primary-btn">TAKVİME İŞLE</button>
-            <button class="cancel-btn" onclick="closeAllModals()">VAZGEÇ</button>
-        </div>
-    </div>
-
-    <div id="masterListModal" class="modal">
-        <div class="modal-content" style="border-left-color: #1D4ED8;">
-            <header class="modal-header">
-                <span style="font-weight:900;">📊 PLANLI ETKİNLİKLER</span>
-                <button class="cancel-btn" style="font-size:12px;" onclick="closeAllModals()">KAPAT</button>
-            </header>
-            <div class="notebook-full-page">
-                <table class="master-table"><tbody id="masterListContent"></tbody></table>
+                <select id="qaAlarmSound" class="prof-input"><option value="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3">Melodi 1</option><option value="https://assets.mixkit.co/active_storage/sfx/1011/1011-preview.mp3">Melodi 2</option></select>
+                <div style="display:flex; gap:10px; margin-bottom:15px;"><label><input type="checkbox" id="qaAlarm" checked> Alarm Çalsın</label></div>
+                <button id="qaSaveBtn" class="primary-btn">TAKVİME İŞLE</button>
+                <button class="arrow-btn" style="width:100%; margin-top:10px;" onclick="closeAllModals()">VAZGEÇ</button>
             </div>
         </div>
     </div>
 
-    <audio id="alarmSound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
+    <div id="masterListModal" class="modal"><div class="modal-content"><header class="modal-header"><h2 style="font-weight:900;">📊 Planlı Etkinlikler</h2><button class="arrow-btn" onclick="closeAllModals()">KAPAT</button></header><div style="flex:1; overflow-y:auto; padding:10px;"><table id="masterListContent" style="width:100%; border-collapse:collapse;"></table></div></div></div>
+    <div id="iconPicker" class="modal" style="background:rgba(255,255,255,0.9);"><div class="modal-content" style="height:auto;"><h2 style="text-align:center; padding:20px;">İkon Seçin</h2><div id="iconGrid" style="display:grid; grid-template-columns:repeat(5,1fr); gap:10px; padding:20px;"></div><button class="primary-btn" onclick="closeIconPicker()">KAPAT</button></div></div>
 
     <script>
-        const toKey = (date) => {
-            const d = new Date(date);
-            return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-        };
-
+        let agenda = JSON.parse(localStorage.getItem('elite_pro_v2026')) || { events: [], notes: {}, profile: {} };
         let currentWeekStart = new Date();
-        const setMon = (date) => {
-            let day = date.getDay();
-            let diff = date.getDate() - day + (day === 0 ? -6 : 1);
-            date.setDate(diff);
-        };
-        setMon(currentWeekStart);
-
-        let agenda = JSON.parse(localStorage.getItem('elite_vFinal_v2')) || { events: [], notes: {} };
         let activeKey = null;
-
+        let selectedIcon = "📅";
         const trDays = ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi', 'Pazar'];
         const trMonths = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
+        const icons = ["🏠","🛒","🧹","🏥","💼","👨‍👩‍👧","✈️","⚽","🤝","🎓","💻","🔑","🍕","🏋️","🧘","🎨","🛠️","📸","🎁","🧪"];
 
         document.addEventListener('DOMContentLoaded', () => {
-            renderUI();
-            setupEvents();
-            setInterval(checkAlarms, 30000);
+            setMon(currentWeekStart); renderUI(); setupIcons(); loadProfileData();
+            setInterval(checkAlarms, 30000); // Her 30 saniyede bir alarm kontrolü
+            document.getElementById('themeToggle').onclick = () => {
+                const b = document.body; b.setAttribute('data-theme', b.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
+            };
         });
 
-        function renderUI() {
-            const grid = document.getElementById('weekGrid');
-            grid.innerHTML = '';
-            const todayKey = toKey(new Date());
-            document.getElementById('dateDisplay').innerText = `${trMonths[currentWeekStart.getMonth()]} ${currentWeekStart.getFullYear()}`;
-            document.getElementById('todayBanner').innerText = `${new Date().getDate()} ${trMonths[new Date().getMonth()]} ${trDays[new Date().getDay() === 0 ? 6 : new Date().getDay()-1]}`;
-
-            for (let i = 0; i < 7; i++) {
-                let d = new Date(currentWeekStart);
-                d.setDate(currentWeekStart.getDate() + i);
-                let key = toKey(d);
-                
-                let dayNotes = (agenda.notes[key] || "").split('\n');
-                let dayEvents = agenda.events.filter(ev => ev.date === key || (ev.repeat && new Date(ev.date).getDay() === d.getDay()));
-                let eventLines = dayEvents.map(ev => `${ev.imp} ${ev.time} ${ev.text}`);
-                let combined = [...eventLines, ...dayNotes].filter(x => x.trim() !== "");
-
-                const card = document.createElement('div');
-                card.className = `day-card day-${i} ${i === 6 ? 'pazar-card' : ''} ${key === todayKey ? 'is-today' : ''}`;
-                card.innerHTML = `
-                    <div class="d-head" onclick="openDay('${key}', ${i})">
-                        <div class="d-num">${d.getDate()}</div>
-                        <div class="d-name">${trDays[i]}</div>
-                    </div>
-                    <div class="d-body">
-                        ${[0, 1, 2, 3].map(idx => `
-                            <div class="d-line" contenteditable="true" onblur="saveQuick('${key}', this)">${combined[idx] || ''}</div>
-                        `).join('')}
-                    </div>
-                `;
-                grid.appendChild(card);
-            }
-        }
-
-        function setupEvents() {
-            document.getElementById('themeToggle').onclick = () => document.body.setAttribute('data-theme', document.body.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
-            document.getElementById('prevWeek').onclick = () => { currentWeekStart.setDate(currentWeekStart.getDate() - 7); renderUI(); };
-            document.getElementById('nextWeek').onclick = () => { currentWeekStart.setDate(currentWeekStart.getDate() + 7); renderUI(); };
-            document.getElementById('quickAddBtn').onclick = () => {
-                document.getElementById('qaDate').value = toKey(new Date());
-                document.getElementById('quickAddModal').style.display = 'flex';
-            };
-            document.getElementById('qaSaveBtn').onclick = () => {
-                const date = document.getElementById('qaDate').value;
-                const time = document.getElementById('qaTime').value;
-                const text = document.getElementById('qaText').value;
-                const imp = document.getElementById('qaImportance').value;
-                const repeat = document.getElementById('qaRepeat').checked;
-                const alarm = document.getElementById('qaAlarm').checked;
-                if(!date || !text) return;
-                agenda.events.push({ id: Date.now(), date, time, text, imp, repeat, alarm, fired: false });
-                save(); renderUI(); closeAllModals();
-            };
-            document.getElementById('saveDayBtn').onclick = () => {
-                agenda.notes[activeKey] = document.getElementById('modalLines').innerText;
-                save(); renderUI(); closeAllModals();
-            };
-            document.getElementById('masterListBtn').onclick = renderMaster;
-        }
-
-        function openDay(key, dayIdx) {
-            activeKey = key;
-            const d = new Date(key);
-            // dayIdx parametresi gelmezse (navigasyondan gelirse) hesapla
-            const calculatedDayIdx = d.getDay() === 0 ? 6 : d.getDay() - 1;
-            
-            document.getElementById('modalFrame').className = `modal-content day-${calculatedDayIdx}`;
-            document.getElementById('modalFullHeader').innerText = key + " " + trDays[calculatedDayIdx];
-            document.getElementById('modalLines').innerText = agenda.notes[key] || "";
-            document.getElementById('dayModal').style.display = 'flex';
-        }
-
-        // GÜNLER ARASI GEÇİŞ FONKSİYONU
-        function changeDay(offset) {
-            let current = new Date(activeKey);
-            current.setDate(current.getDate() + offset);
-            let newKey = toKey(current);
-            openDay(newKey);
-        }
-
-        function renderMaster() {
-            const cont = document.getElementById('masterListContent');
-            cont.innerHTML = "";
-            let sorted = [...agenda.events].sort((a,b) => a.date.localeCompare(b.date));
-            sorted.forEach(ev => {
-                cont.innerHTML += `<tr>
-                    <td onclick="manageEv(${ev.id})" style="cursor:pointer; font-size:18px;">${ev.imp}</td>
-                    <td><b>${ev.date}</b></td>
-                    <td>${ev.time} - ${ev.text} ${ev.repeat ? '🔄' : ''}</td>
-                </tr>`;
-            });
-            document.getElementById('masterListModal').style.display = 'flex';
-        }
-
-        function manageEv(id) {
-            const idx = agenda.events.findIndex(e => e.id === id);
-            if(confirm(`"${agenda.events[idx].text}" silinsin mi?`)) {
-                agenda.events.splice(idx, 1);
-                save(); renderUI(); renderMaster();
-            }
-        }
-
+        // ALARM KONTROL SİSTEMİ
         function checkAlarms() {
             const now = new Date();
-            const curT = String(now.getHours()).padStart(2,'0')+":"+String(now.getMinutes()).padStart(2,'0');
-            const curK = toKey(now);
+            const dateKey = toKey(now);
+            const timeKey = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+            
             agenda.events.forEach(ev => {
-                if(ev.alarm && ev.date === curK && ev.time === curT && !ev.fired) {
-                    document.getElementById('alarmSound').play();
-                    alert("HATIRLATICI: " + ev.text);
-                    ev.fired = true;
-                    setTimeout(() => ev.fired = false, 61000);
+                if (ev.date === dateKey && ev.time === timeKey && ev.alarm && !ev.fired) {
+                    triggerAlarm(ev);
+                    ev.fired = true; // Alarmın tekrar tekrar çalmasını engelle
+                    saveData();
                 }
             });
         }
 
-        function save() { localStorage.setItem('elite_vFinal_v2', JSON.stringify(agenda)); }
-        function saveQuick(key, el) {
-            const lines = Array.from(el.parentElement.querySelectorAll('.d-line')).map(l => l.innerText);
-            agenda.notes[key] = lines.filter(line => !line.includes('⚪') && !line.includes('🟡') && !line.includes('🔴')).join('\n');
-            save();
+        function triggerAlarm(ev) {
+            const audio = document.getElementById('alarmAudio');
+            audio.src = ev.sound || audio.src;
+            audio.play();
+            document.getElementById('alarmInfo').innerText = `${ev.icon} ${ev.text} - ${ev.time}`;
+            document.getElementById('alarmOverlay').style.display = 'flex';
         }
+
+        function stopAlarm() {
+            document.getElementById('alarmAudio').pause();
+            document.getElementById('alarmOverlay').style.display = 'none';
+        }
+
+        const toKey = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        function setMon(date) { let d = date.getDay(); let diff = date.getDate() - d + (d === 0 ? -6 : 1); date.setDate(diff); }
+
+        function renderUI() {
+            const grid = document.getElementById('weekGrid');
+            grid.innerHTML = '';
+            document.getElementById('dateDisplay').innerText = `${trMonths[currentWeekStart.getMonth()]} ${currentWeekStart.getFullYear()}`;
+            document.getElementById('todayBanner').innerText = `${new Date().getDate()} ${trMonths[new Date().getMonth()]} ${trDays[new Date().getDay() === 0 ? 6 : new Date().getDay()-1]}`;
+
+            for (let i = 0; i < 7; i++) {
+                let d = new Date(currentWeekStart); d.setDate(currentWeekStart.getDate() + i);
+                let key = toKey(d);
+                let dayEvents = agenda.events.filter(ev => ev.date === key).sort((a,b) => a.time.localeCompare(b.time));
+                let eventHtml = dayEvents.map(ev => `<div class="day-event-item">${ev.icon} ${ev.time} - ${ev.text}</div>`).join('');
+
+                const card = document.createElement('div');
+                card.className = `day-card day-${i} ${i === 6 ? 'pazar-card' : ''} ${key === toKey(new Date()) ? 'is-today' : ''}`;
+                card.innerHTML = `<div onclick="openDay('${key}')" style="cursor:pointer"><div class="d-num">${d.getDate()}</div><div class="d-name">${trDays[i]}</div></div>
+                                  <div id="ev-list-${key}">${eventHtml}</div>
+                                  <div class="not-lines" contenteditable="true" onblur="saveQuickNote('${key}', this)">${agenda.notes[key] || ""}</div>`;
+                grid.appendChild(card);
+            }
+        }
+
+        function openDay(key) {
+            activeKey = key;
+            const d = new Date(key); const idx = d.getDay() === 0 ? 6 : d.getDay() - 1;
+            document.getElementById('modalFrame').className = `modal-content day-${idx}`;
+            document.getElementById('modalFullHeader').innerText = `${d.getDate()} ${trMonths[d.getMonth()]} ${trDays[idx]}`;
+            
+            let dayEvents = agenda.events.filter(ev => ev.date === key).sort((a,b) => a.time.localeCompare(b.time));
+            let eventText = dayEvents.map(ev => `${ev.icon} ${ev.time} : ${ev.text}`).join('\n');
+            let existingNotes = agenda.notes[key] || "";
+            document.getElementById('modalLines').innerText = eventText + (eventText && existingNotes ? '\n' : '') + existingNotes;
+            document.getElementById('dayModal').style.display = 'flex';
+        }
+
+        document.getElementById('qaSaveBtn').onclick = () => {
+            const ev = { id: Date.now(), date: document.getElementById('qaDate').value, time: document.getElementById('qaTime').value, text: document.getElementById('qaText').value, icon: selectedIcon, alarm: document.getElementById('qaAlarm').checked, sound: document.getElementById('qaAlarmSound').value, fired: false };
+            if(!ev.date || !ev.text) return alert("Eksik bilgi!");
+            agenda.events.push(ev); saveData(); renderUI(); closeAllModals();
+        };
+
+        function setupIcons() {
+            icons.forEach(icon => {
+                const div = document.createElement('div'); div.style.fontSize="30px"; div.style.cursor="pointer"; div.innerText = icon;
+                div.onclick = () => { selectedIcon = icon; document.getElementById('selectedIcon').innerText = icon; closeIconPicker(); };
+                document.getElementById('iconGrid').appendChild(div);
+            });
+        }
+
+        function togglePanel() { document.getElementById('sidePanel').classList.toggle('active'); }
+        function saveData() { localStorage.setItem('elite_pro_v2026', JSON.stringify(agenda)); }
         function closeAllModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
+        function saveQuickNote(key, el) { agenda.notes[key] = el.innerText; saveData(); }
+        function openIconPicker() { document.getElementById('iconPicker').style.display = 'flex'; }
+        function closeIconPicker() { document.getElementById('iconPicker').style.display = 'none'; }
+        document.getElementById('saveDayBtn').onclick = () => { agenda.notes[activeKey] = document.getElementById('modalLines').innerText; saveData(); renderUI(); closeAllModals(); };
+        document.getElementById('masterListBtn').onclick = () => {
+            const cont = document.getElementById('masterListContent'); cont.innerHTML = "";
+            agenda.events.sort((a,b)=>a.date.localeCompare(b.date)).forEach(ev => {
+                cont.innerHTML += `<tr style="border-bottom:1px solid #ddd"><td>${ev.date}</td><td>${ev.time}</td><td>${ev.icon} ${ev.text}</td><td><button onclick="deleteEvent(${ev.id})">❌</button></td></tr>`;
+            });
+            document.getElementById('masterListModal').style.display = 'flex';
+        };
+        function deleteEvent(id) { agenda.events = agenda.events.filter(e => e.id !== id); saveData(); renderUI(); closeAllModals(); }
+        document.getElementById('quickAddBtn').onclick = () => { document.getElementById('qaDate').value = toKey(new Date()); document.getElementById('quickAddModal').style.display = 'flex'; };
+        document.getElementById('prevWeek').onclick = () => { currentWeekStart.setDate(currentWeekStart.getDate() - 7); renderUI(); };
+        document.getElementById('nextWeek').onclick = () => { currentWeekStart.setDate(currentWeekStart.getDate() + 7); renderUI(); };
+        function changeDay(offset) { let c = new Date(activeKey); c.setDate(c.getDate() + offset); openDay(toKey(c)); }
+        function loadProfileData() { let p = agenda.profile; document.getElementById('profName').value = p.name || ""; document.getElementById('profPhone').value = p.phone || ""; document.getElementById('profEmail').value = p.email || ""; document.getElementById('profBio').value = p.bio || ""; if(p.img) document.getElementById('profImg').src = p.img; }
+        function saveProfile() { agenda.profile = { name: document.getElementById('profName').value, phone: document.getElementById('profPhone').value, email: document.getElementById('profEmail').value, bio: document.getElementById('profBio').value, img: document.getElementById('profImg').src }; saveData(); alert("Kaydedildi!"); }
+        function loadProfilePic(e) { const r = new FileReader(); r.onload = () => { document.getElementById('profImg').src = r.result; }; r.readAsDataURL(e.target.files[0]); }
+        function handleLogout() { if(confirm("Çıkış?")) location.reload(); }
     </script>
 </body>
 </html>
