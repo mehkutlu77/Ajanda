@@ -16,18 +16,25 @@
             --pzt: #442727; --sal: #233044; --car: #223020; --per: #443320; --cum: #332344; --cmt: #203344; --paz: #444420;
         }
 
+        /* ZEMİN YAPILARI */
+        .f-lined { background: linear-gradient(transparent 34px, var(--line) 35px) !important; background-size: 100% 35px !important; }
+        .f-squared { background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px) !important; background-size: 25px 25px !important; }
+        .f-dotted { background-image: radial-gradient(var(--line) 1px, transparent 1px) !important; background-size: 25px 25px !important; }
+        .f-blank { background: transparent !important; }
+
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
         body { background: var(--bg); color: var(--text); display: flex; justify-content: center; height: 100vh; overflow: hidden; transition: 0.3s; }
 
-        .app-wrapper { width: 100vw; max-width: 450px; padding: 12px; height: 100vh; display: flex; flex-direction: column; position: relative; }
+        #loginOverlay { position: fixed; inset: 0; background: var(--bg); z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        .login-box { background: var(--card); padding: 30px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 350px; text-align: center; }
 
+        .app-wrapper { width: 100vw; max-width: 450px; padding: 12px; height: 100vh; display: flex; flex-direction: column; position: relative; display: none; }
         .wordart { font-size: 32px; font-weight: 900; background: linear-gradient(#3B82F6, #1D4ED8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; }
         .today-banner { text-align: center; font-size: 18px; font-weight: 800; color: #1D4ED8; margin: 5px 0 10px 0; }
         
         .circle-btn { width: 40px; height: 40px; border-radius: 12px; border: none; background: var(--card); color: var(--text); box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; }
 
-        /* YAN PANEL */
-        .side-panel { position: absolute; right: -320px; top: 0; width: 300px; height: 100%; background: var(--bg); z-index: 2000; box-shadow: -5px 0 20px rgba(0,0,0,0.2); transition: 0.4s; padding: 20px; display: flex; flex-direction: column; border-left: 10px solid #1D4ED8; }
+        .side-panel { position: absolute; right: -320px; top: 0; width: 300px; height: 100%; background: var(--bg); z-index: 2000; box-shadow: -5px 0 20px rgba(0,0,0,0.2); transition: 0.4s; padding: 20px; display: flex; flex-direction: column; border-left: 10px solid #1D4ED8; overflow-y: auto; }
         .side-panel.active { right: 0; }
         .panel-close { position: absolute; left: -45px; top: 20px; background: #1D4ED8; color: white; border: none; width: 45px; height: 45px; border-radius: 12px 0 0 12px; cursor: pointer; font-size: 20px; }
 
@@ -41,25 +48,44 @@
         .week-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; flex: 1; margin-bottom: 5px; overflow-y: auto; }
         .pazar-card { grid-column: span 2 !important; }
 
-        .day-card { background: var(--card); border-radius: 20px; padding: 12px; min-height: 125px; border-left: 8px solid var(--line); display: flex; flex-direction: column; box-shadow: 0 4px 12px rgba(0,0,0,0.03); position: relative; }
+        .day-card { background: var(--card); border-radius: 20px; padding: 12px; min-height: 140px; border-left: 8px solid var(--line); display: flex; flex-direction: column; box-shadow: 0 4px 12px rgba(0,0,0,0.03); position: relative; }
         .is-today { border: 3px solid #1D4ED8 !important; }
         .d-num { font-size: 26px; font-weight: 900; line-height: 1; }
         .d-name { font-size: 11px; font-weight: 700; opacity: 0.7; text-transform: uppercase; margin-bottom: 5px; }
         
-        .day-event-item { font-size: 11px; font-weight: 700; background: rgba(29, 78, 216, 0.1); color: #1D4ED8; padding: 3px 6px; border-radius: 4px; margin-bottom: 2px; display: flex; align-items: center; gap: 4px; border-left: 3px solid #1D4ED8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .not-lines { flex: 1; background: linear-gradient(transparent 23px, var(--line) 24px); background-size: 100% 24px; line-height: 24px; font-size: 13px; outline: none; min-height: 48px; overflow: hidden; margin-top: 5px; }
+        .not-lines { flex: 1; line-height: 24px; font-size: 12px; outline: none; min-height: 72px; height: 72px; overflow: hidden; margin-top: 5px; pointer-events: none; }
+        
+        /* ETKİNLİK TASARIMI */
+        .day-event-item { font-size: 10px; font-weight: 800; background: rgba(0,0,0,0.05); padding: 2px 4px; border-radius: 4px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
 
-        /* Modallar */
+        .format-bar { display: flex; gap: 5px; padding: 10px; background: #eee; border-radius: 10px; margin-bottom: 5px; align-items: center; overflow-x: auto; }
+        .format-btn { min-width: 32px; height: 32px; border: 1px solid #ccc; background: white; cursor: pointer; border-radius: 5px; font-size: 14px; font-weight: bold; display: flex; align-items: center; justify-content: center; }
+        .color-dot { width: 20px; height: 20px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); cursor: pointer; flex-shrink: 0; }
+
         .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); display: none; z-index: 3000; justify-content: center; align-items: center; }
         .modal-content { width: 95vw; max-width: 420px; height: 85vh; background: var(--card); border-radius: 30px; display: flex; flex-direction: column; border-left: 15px solid var(--line); overflow: hidden; }
         .modal-header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--line); }
-        .notebook-page { flex: 1; padding: 25px; outline: none; background: linear-gradient(transparent 34px, var(--line) 35px); background-size: 100% 35px; line-height: 35px; font-size: 17px; overflow-y: auto; white-space: pre-wrap; }
-
-        /* Alarm Bildirim Ekranı */
-        #alarmOverlay { position: fixed; inset: 0; background: rgba(29, 78, 216, 0.95); z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; color: white; text-align: center; padding: 20px; animation: pulseBg 2s infinite; }
-        @keyframes pulseBg { 0% { background: rgba(29, 78, 216, 0.95); } 50% { background: rgba(171, 71, 188, 0.95); } 100% { background: rgba(29, 78, 216, 0.95); } }
-        .alarm-icon { font-size: 80px; margin-bottom: 20px; }
         
+        /* NOTEBOOK VE RESİM ÖZELLİĞİ */
+        .notebook-page { flex: 1; padding: 25px; outline: none; line-height: 35px; font-size: 17px; overflow-y: auto; position: relative; }
+        .notebook-page img { 
+            display: inline-block; 
+            max-width: 100%; 
+            border-radius: 10px; 
+            margin: 10px 0; 
+            resize: both; /* Çekerek büyütme özelliği */
+            overflow: auto; 
+            border: 2px dashed transparent; 
+            vertical-align: bottom;
+            cursor: nwse-resize;
+        }
+        .notebook-page img:focus { border-color: #1D4ED8; outline: none; }
+
+        #masterListContent { width: 100%; border-collapse: separate; border-spacing: 0 10px; }
+        #masterListContent tr { background: #f8f9fa; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        #masterListContent td { padding: 12px; font-size: 13px; font-weight: 600; }
+
+        #alarmOverlay { position: fixed; inset: 0; background: rgba(29, 78, 216, 0.95); z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; color: white; text-align: center; padding: 20px; }
         .primary-btn { background: #1D4ED8; color: white; border: none; padding: 14px; border-radius: 12px; font-weight: 800; cursor: pointer; width: 100%; }
 
         .day-0 { background: var(--pzt); border-left-color: var(--pzt-b); }
@@ -73,11 +99,20 @@
 </head>
 <body data-theme="light">
 
+    <div id="loginOverlay">
+        <div class="login-box">
+            <h1 class="wordart" style="margin-bottom:20px;">Elite Giriş</h1>
+            <input type="email" id="logEmail" class="prof-input" placeholder="Mail Adresiniz">
+            <input type="password" id="logPass" class="prof-input" placeholder="Şifreniz">
+            <button class="primary-btn" onclick="tryLogin()">GİRİŞ YAP</button>
+        </div>
+    </div>
+
     <div id="alarmOverlay">
-        <div class="alarm-icon">🔔</div>
-        <h1 style="font-size: 40px; margin-bottom: 10px;">HATIRLATICI!</h1>
-        <div id="alarmInfo" style="font-size: 24px; font-weight: bold; margin-bottom: 30px;">Etkinlik Adı - 12:00</div>
-        <button onclick="stopAlarm()" class="primary-btn" style="background: white; color: #1D4ED8; width: 200px; font-size: 20px;">TAMAM</button>
+        <div style="font-size:80px;">🔔</div>
+        <h1 style="font-size: 30px; margin: 20px 0;">HATIRLATICI!</h1>
+        <div id="alarmInfo" style="font-size: 20px; font-weight: bold; margin-bottom: 30px;"></div>
+        <button onclick="stopAlarm()" class="primary-btn" style="background: white; color: #1D4ED8; width: 200px;">TAMAM</button>
         <audio id="alarmAudio" loop src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"></audio>
     </div>
 
@@ -89,15 +124,24 @@
             <input type="file" id="profPicInput" style="display:none" onchange="loadProfilePic(event)">
             <input type="text" id="profName" class="prof-input" placeholder="Ad Soyad">
             <input type="text" id="profPhone" class="prof-input" placeholder="Telefon">
-            <input type="email" id="profEmail" class="prof-input" placeholder="E-posta">
+            <input type="email" id="profEmail" class="prof-input" placeholder="E-posta" readonly>
             <textarea id="profBio" class="prof-input" style="height:80px;" placeholder="Notlar..."></textarea>
+            
+            <label style="font-size:12px; font-weight:bold; margin-bottom:5px; display:block;">SAYFA YAPISI:</label>
+            <select id="pageFormat" class="prof-input" onchange="updatePageFormat(this.value)">
+                <option value="f-blank">Düz (Sadece Renk)</option>
+                <option value="f-lined">Çizgili</option>
+                <option value="f-squared">Kareli</option>
+                <option value="f-dotted">Noktalı</option>
+            </select>
+
             <button class="primary-btn" onclick="saveProfile()" style="padding:10px;">GÜNCELLE</button>
         </div>
         <button onclick="handleLogout()" style="width:100%; border:none; background:none; color:#cc0000; font-weight:bold; cursor:pointer; text-decoration:underline;">Oturumu Kapat</button>
     </div>
 
-    <div class="app-wrapper">
-        <header class="app-header" style="display:flex; justify-content:space-between; align-items:center;">
+    <div class="app-wrapper" id="mainApp">
+        <header style="display:flex; justify-content:space-between; align-items:center;">
             <h1 class="wordart">Hafta Planı</h1>
             <div style="display:flex; gap:8px;">
                 <button id="themeToggle" class="circle-btn">🌓</button>
@@ -109,7 +153,7 @@
         <div id="todayBanner" class="today-banner"></div>
         <nav class="nav-control">
             <button id="prevWeek" class="arrow-btn">❮</button>
-            <div id="dateDisplay" style="font-weight: 900; color:#1D4ED8;">Şubat 2026</div>
+            <div id="dateDisplay" style="font-weight: 900; color:#1D4ED8;"></div>
             <button id="nextWeek" class="arrow-btn">❯</button>
         </nav>
         <main class="week-grid" id="weekGrid"></main>
@@ -118,17 +162,39 @@
     <div id="dayModal" class="modal">
         <div class="modal-content" id="modalFrame">
             <header class="modal-header">
-                <button class="arrow-btn" style="color:red;" onclick="closeAllModals()">KAPAT</button>
-                <div style="display:flex; gap:10px;"><button onclick="changeDay(-1)" class="arrow-btn">❮</button><h2 id="modalFullHeader" style="font-size:16px;"></h2><button onclick="changeDay(1)" class="arrow-btn">❯</button></div>
+                <button class="arrow-btn" onclick="navigateDay(-1)">❮</button>
+                <div style="text-align:center">
+                    <h2 id="modalFullHeader" style="font-size:14px; margin-bottom:5px;"></h2>
+                    <div id="dayEventsHeader" style="display:flex; gap:4px; flex-wrap:wrap; justify-content:center;"></div>
+                </div>
+                <button class="arrow-btn" onclick="navigateDay(1)">❯</button>
                 <button id="saveDayBtn" class="primary-btn" style="width:auto; padding:5px 15px;">KAYDET</button>
+                <button onclick="closeAllModals()" style="border:none; background:none; color:red; font-size:18px; margin-left:10px;">✕</button>
             </header>
+            
+            <div class="format-bar">
+                <button class="format-btn" onclick="formatDoc('bold')">B</button>
+                <button class="format-btn" onclick="formatDoc('italic')">I</button>
+                <button class="format-btn" onclick="changeSize(1)">A+</button>
+                <button class="format-btn" onclick="changeSize(-1)">A-</button>
+                <div class="color-dot" style="background:#000000" onclick="formatDoc('foreColor','#000000')"></div>
+                <div class="color-dot" style="background:#FF0000" onclick="formatDoc('foreColor','#FF0000')"></div>
+                <div class="color-dot" style="background:#008000" onclick="formatDoc('foreColor','#008000')"></div>
+                <div class="color-dot" style="background:#0000FF" onclick="formatDoc('foreColor','#0000FF')"></div>
+                <button class="format-btn" onclick="document.getElementById('fileInp').click()">📷</button>
+                <input type="file" id="fileInp" hidden accept="image/*" onchange="addPhoto(event)">
+            </div>
+
             <div class="notebook-page" id="modalLines" contenteditable="true"></div>
         </div>
     </div>
 
     <div id="quickAddModal" class="modal">
         <div class="modal-content" style="height:auto; border-left:10px solid #1D4ED8; padding-bottom:20px;">
-            <div style="background:#1D4ED8; color:white; padding:15px; text-align:center; font-weight:800;">🔔 Yeni Etkinlik & Alarm</div>
+            <div style="background:#1D4ED8; color:white; padding:15px; display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-weight:800;">🔔 Yeni Etkinlik & Alarm</span>
+                <button onclick="closeAllModals()" style="background:none; border:none; color:white; font-size:20px; font-weight:900; cursor:pointer;">✕</button>
+            </div>
             <div style="padding:15px;">
                 <input type="date" id="qaDate" class="prof-input">
                 <input type="time" id="qaTime" class="prof-input">
@@ -136,45 +202,95 @@
                     <button onclick="openIconPicker()" id="selectedIcon" class="circle-btn" style="min-width:50px;">📅</button>
                     <input type="text" id="qaText" class="prof-input" style="margin-bottom:0; flex:1;" placeholder="Etkinlik adı...">
                 </div>
+                <div id="repeatCountDiv" style="display:none; margin-top:10px;">
+                    Kaç hafta sürsün? <input type="number" id="qaRepeatWeeks" class="prof-input" style="width:60px; display:inline; margin:0 5px;" value="4">
+                </div>
+                <div style="background: #f0f2f5; padding: 10px; border-radius: 10px; margin-bottom: 10px;">
+                   <label style="display: flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" id="qaRepeat" onchange="document.getElementById('repeatCountDiv').style.display = this.checked ? 'block' : 'none'"> 🔄 Her hafta tekrarla
+                    </label>
+                    <label style="font-size: 13px; display: block;"><input type="checkbox" id="qaNotify"> 📱 Bildirim Panelinde Göster</label>
+                    <label style="font-size: 13px; display: block;"><input type="checkbox" id="qaOverlay" checked> 🖥️ Ekran Üzerinde Uyarı</label>
+                </div>
                 <select id="qaAlarmSound" class="prof-input"><option value="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3">Melodi 1</option><option value="https://assets.mixkit.co/active_storage/sfx/1011/1011-preview.mp3">Melodi 2</option></select>
-                <div style="display:flex; gap:10px; margin-bottom:15px;"><label><input type="checkbox" id="qaAlarm" checked> Alarm Çalsın</label></div>
-                <button id="qaSaveBtn" class="primary-btn">TAKVİME İŞLE</button>
-                <button class="arrow-btn" style="width:100%; margin-top:10px;" onclick="closeAllModals()">VAZGEÇ</button>
+                <div style="display:flex; gap:10px;">
+                    <button id="qaSaveBtn" class="primary-btn" style="flex:2;">TAKVİME İŞLE</button>
+                    <button onclick="closeAllModals()" class="primary-btn" style="background:#ccc; color:#333; flex:1;">VAZGEÇ</button>
+                </div>
             </div>
         </div>
     </div>
 
-    <div id="masterListModal" class="modal"><div class="modal-content"><header class="modal-header"><h2 style="font-weight:900;">📊 Planlı Etkinlikler</h2><button class="arrow-btn" onclick="closeAllModals()">KAPAT</button></header><div style="flex:1; overflow-y:auto; padding:10px;"><table id="masterListContent" style="width:100%; border-collapse:collapse;"></table></div></div></div>
-    <div id="iconPicker" class="modal" style="background:rgba(255,255,255,0.9);"><div class="modal-content" style="height:auto;"><h2 style="text-align:center; padding:20px;">İkon Seçin</h2><div id="iconGrid" style="display:grid; grid-template-columns:repeat(5,1fr); gap:10px; padding:20px;"></div><button class="primary-btn" onclick="closeIconPicker()">KAPAT</button></div></div>
+    <div id="masterListModal" class="modal"><div class="modal-content"><header class="modal-header"><h2>📊 Planlı Etkinlikler</h2><button class="arrow-btn" onclick="closeAllModals()">KAPAT</button></header><div style="flex:1; overflow-y:auto; padding:15px;"><table id="masterListContent"></table></div></div></div>
+    <div id="iconPicker" class="modal"><div class="modal-content" style="height:auto;"><div id="iconGrid" style="display:grid; grid-template-columns:repeat(5,1fr); gap:10px; padding:20px;"></div></div></div>
 
     <script>
-        let agenda = JSON.parse(localStorage.getItem('elite_pro_v2026')) || { events: [], notes: {}, profile: {} };
+        let agenda = JSON.parse(localStorage.getItem('elite_pro_v2026')) || { events: [], notes: {}, profile: { pageFormat: 'f-lined' }, user: null };
         let currentWeekStart = new Date();
         let activeKey = null;
         let selectedIcon = "📅";
+        let currentFontSize = 3; 
         const trDays = ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi', 'Pazar'];
         const trMonths = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
         const icons = ["🏠","🛒","🧹","🏥","💼","👨‍👩‍👧","✈️","⚽","🤝","🎓","💻","🔑","🍕","🏋️","🧘","🎨","🛠️","📸","🎁","🧪"];
 
+        function updatePageFormat(val) { agenda.profile.pageFormat = val; saveData(); renderUI(); }
+
+        function navigateDay(step) {
+            agenda.notes[activeKey] = document.getElementById('modalLines').innerHTML;
+            saveData();
+            let d = new Date(activeKey);
+            d.setDate(d.getDate() + step);
+            openDay(toKey(d));
+            renderUI();
+        }
+
+        function tryLogin() {
+            const email = document.getElementById('logEmail').value;
+            const pass = document.getElementById('logPass').value;
+            if(email && pass.length > 3) { agenda.user = { email: email }; saveData(); checkAuth(); } 
+            else { alert("Geçerli bir giriş yapın!"); }
+        }
+
+        function checkAuth() {
+            if(agenda.user) {
+                document.getElementById('loginOverlay').style.display = 'none';
+                document.getElementById('mainApp').style.display = 'flex';
+            }
+        }
+
+        function formatDoc(cmd, val) { document.execCommand(cmd, false, val); }
+        function changeSize(dir) { currentFontSize = Math.max(1, Math.min(7, currentFontSize + dir)); formatDoc('fontSize', currentFontSize); }
+
+        function addPhoto(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (f) => {
+                const img = document.createElement('img');
+                img.src = f.target.result;
+                img.tabIndex = 0; // Tıklanabilir yaparak boyutlandırmayı aktif eder
+                document.getElementById('modalLines').appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
-            setMon(currentWeekStart); renderUI(); setupIcons(); loadProfileData();
-            setInterval(checkAlarms, 30000); // Her 30 saniyede bir alarm kontrolü
+            checkAuth(); setMon(currentWeekStart); renderUI(); setupIcons(); loadProfileData();
+            setInterval(checkAlarms, 30000);
             document.getElementById('themeToggle').onclick = () => {
                 const b = document.body; b.setAttribute('data-theme', b.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
             };
         });
 
-        // ALARM KONTROL SİSTEMİ
         function checkAlarms() {
             const now = new Date();
             const dateKey = toKey(now);
             const timeKey = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-            
             agenda.events.forEach(ev => {
-                if (ev.date === dateKey && ev.time === timeKey && ev.alarm && !ev.fired) {
-                    triggerAlarm(ev);
-                    ev.fired = true; // Alarmın tekrar tekrar çalmasını engelle
-                    saveData();
+                if (ev.date === dateKey && ev.time === timeKey && !ev.fired) {
+                    if(ev.overlay) triggerAlarm(ev);
+                    ev.fired = true; saveData();
                 }
             });
         }
@@ -182,36 +298,40 @@
         function triggerAlarm(ev) {
             const audio = document.getElementById('alarmAudio');
             audio.src = ev.sound || audio.src;
-            audio.play();
+            audio.play().catch(()=>{});
             document.getElementById('alarmInfo').innerText = `${ev.icon} ${ev.text} - ${ev.time}`;
             document.getElementById('alarmOverlay').style.display = 'flex';
         }
 
-        function stopAlarm() {
-            document.getElementById('alarmAudio').pause();
-            document.getElementById('alarmOverlay').style.display = 'none';
-        }
+        function stopAlarm() { document.getElementById('alarmAudio').pause(); document.getElementById('alarmOverlay').style.display = 'none'; }
 
         const toKey = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
         function setMon(date) { let d = date.getDay(); let diff = date.getDate() - d + (d === 0 ? -6 : 1); date.setDate(diff); }
 
         function renderUI() {
             const grid = document.getElementById('weekGrid');
+            if(!grid) return;
             grid.innerHTML = '';
             document.getElementById('dateDisplay').innerText = `${trMonths[currentWeekStart.getMonth()]} ${currentWeekStart.getFullYear()}`;
             document.getElementById('todayBanner').innerText = `${new Date().getDate()} ${trMonths[new Date().getMonth()]} ${trDays[new Date().getDay() === 0 ? 6 : new Date().getDay()-1]}`;
+
+            const pf = agenda.profile.pageFormat || 'f-blank';
 
             for (let i = 0; i < 7; i++) {
                 let d = new Date(currentWeekStart); d.setDate(currentWeekStart.getDate() + i);
                 let key = toKey(d);
                 let dayEvents = agenda.events.filter(ev => ev.date === key).sort((a,b) => a.time.localeCompare(b.time));
+                
+                // BURASI GÜNCELLENDİ: Etkinlik ismi artık görünüyor
                 let eventHtml = dayEvents.map(ev => `<div class="day-event-item">${ev.icon} ${ev.time} - ${ev.text}</div>`).join('');
 
                 const card = document.createElement('div');
                 card.className = `day-card day-${i} ${i === 6 ? 'pazar-card' : ''} ${key === toKey(new Date()) ? 'is-today' : ''}`;
                 card.innerHTML = `<div onclick="openDay('${key}')" style="cursor:pointer"><div class="d-num">${d.getDate()}</div><div class="d-name">${trDays[i]}</div></div>
-                                  <div id="ev-list-${key}">${eventHtml}</div>
-                                  <div class="not-lines" contenteditable="true" onblur="saveQuickNote('${key}', this)">${agenda.notes[key] || ""}</div>`;
+                                  <div style="flex:1; overflow:hidden;">${eventHtml}</div>
+                                  <div class="not-lines ${pf}" style="pointer-events:none; opacity:0.6;">
+                                      ${agenda.notes[key] ? agenda.notes[key] : ''}
+                                  </div>`;
                 grid.appendChild(card);
             }
         }
@@ -219,20 +339,45 @@
         function openDay(key) {
             activeKey = key;
             const d = new Date(key); const idx = d.getDay() === 0 ? 6 : d.getDay() - 1;
-            document.getElementById('modalFrame').className = `modal-content day-${idx}`;
             document.getElementById('modalFullHeader').innerText = `${d.getDate()} ${trMonths[d.getMonth()]} ${trDays[idx]}`;
             
-            let dayEvents = agenda.events.filter(ev => ev.date === key).sort((a,b) => a.time.localeCompare(b.time));
-            let eventText = dayEvents.map(ev => `${ev.icon} ${ev.time} : ${ev.text}`).join('\n');
-            let existingNotes = agenda.notes[key] || "";
-            document.getElementById('modalLines').innerText = eventText + (eventText && existingNotes ? '\n' : '') + existingNotes;
+            const dayEvents = agenda.events.filter(ev => ev.date === key).sort((a,b) => a.time.localeCompare(b.time));
+            document.getElementById('dayEventsHeader').innerHTML = dayEvents.map(ev => `<span style="background:rgba(29, 78, 216, 0.1); padding:2px 6px; border-radius:10px; font-size:10px; font-weight:bold;">${ev.icon} ${ev.time} - ${ev.text}</span>`).join('');
+
+            const ml = document.getElementById('modalLines');
+            ml.innerHTML = agenda.notes[activeKey] || "";
+            ml.className = "notebook-page " + (agenda.profile.pageFormat || 'f-blank');
             document.getElementById('dayModal').style.display = 'flex';
         }
 
+        document.getElementById('saveDayBtn').onclick = () => { 
+            agenda.notes[activeKey] = document.getElementById('modalLines').innerHTML; 
+            saveData(); renderUI(); closeAllModals(); 
+        };
+
         document.getElementById('qaSaveBtn').onclick = () => {
-            const ev = { id: Date.now(), date: document.getElementById('qaDate').value, time: document.getElementById('qaTime').value, text: document.getElementById('qaText').value, icon: selectedIcon, alarm: document.getElementById('qaAlarm').checked, sound: document.getElementById('qaAlarmSound').value, fired: false };
-            if(!ev.date || !ev.text) return alert("Eksik bilgi!");
-            agenda.events.push(ev); saveData(); renderUI(); closeAllModals();
+            const startDate = document.getElementById('qaDate').value;
+            const repeat = document.getElementById('qaRepeat').checked;
+            const weekCount = parseInt(document.getElementById('qaRepeatWeeks').value) || 1;
+            if(!startDate || !document.getElementById('qaText').value) return alert("Eksik bilgi!");
+
+            for(let i=0; i < (repeat ? weekCount : 1); i++) {
+                let d = new Date(startDate);
+                d.setDate(d.getDate() + (i * 7));
+                const ev = { 
+                    id: Date.now() + i, 
+                    date: toKey(d), 
+                    time: document.getElementById('qaTime').value, 
+                    text: document.getElementById('qaText').value, 
+                    icon: selectedIcon, 
+                    overlay: document.getElementById('qaOverlay').checked, 
+                    notify: document.getElementById('qaNotify').checked, 
+                    sound: document.getElementById('qaAlarmSound').value, 
+                    fired: false 
+                };
+                agenda.events.push(ev);
+            }
+            saveData(); renderUI(); closeAllModals();
         };
 
         function setupIcons() {
@@ -246,26 +391,52 @@
         function togglePanel() { document.getElementById('sidePanel').classList.toggle('active'); }
         function saveData() { localStorage.setItem('elite_pro_v2026', JSON.stringify(agenda)); }
         function closeAllModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
-        function saveQuickNote(key, el) { agenda.notes[key] = el.innerText; saveData(); }
         function openIconPicker() { document.getElementById('iconPicker').style.display = 'flex'; }
         function closeIconPicker() { document.getElementById('iconPicker').style.display = 'none'; }
-        document.getElementById('saveDayBtn').onclick = () => { agenda.notes[activeKey] = document.getElementById('modalLines').innerText; saveData(); renderUI(); closeAllModals(); };
+        
         document.getElementById('masterListBtn').onclick = () => {
             const cont = document.getElementById('masterListContent'); cont.innerHTML = "";
-            agenda.events.sort((a,b)=>a.date.localeCompare(b.date)).forEach(ev => {
-                cont.innerHTML += `<tr style="border-bottom:1px solid #ddd"><td>${ev.date}</td><td>${ev.time}</td><td>${ev.icon} ${ev.text}</td><td><button onclick="deleteEvent(${ev.id})">❌</button></td></tr>`;
+            const sorted = [...agenda.events].sort((a,b) => a.date.localeCompare(b.date));
+            sorted.forEach(ev => {
+                cont.innerHTML += `<tr>
+                    <td>${ev.date}</td>
+                    <td>${ev.time}</td>
+                    <td>${ev.icon} ${ev.text}</td>
+                    <td style="text-align:right;"><button onclick="deleteEvent(${ev.id})" style="border:none; background:none; cursor:pointer;">❌</button></td>
+                </tr>`;
             });
             document.getElementById('masterListModal').style.display = 'flex';
         };
+
         function deleteEvent(id) { agenda.events = agenda.events.filter(e => e.id !== id); saveData(); renderUI(); closeAllModals(); }
-        document.getElementById('quickAddBtn').onclick = () => { document.getElementById('qaDate').value = toKey(new Date()); document.getElementById('quickAddModal').style.display = 'flex'; };
+        document.getElementById('quickAddBtn').onclick = () => { 
+            document.getElementById('qaDate').value = toKey(new Date()); 
+            document.getElementById('qaRepeat').checked = false;
+            document.getElementById('repeatCountDiv').style.display = 'none';
+            document.getElementById('quickAddModal').style.display = 'flex'; 
+        };
         document.getElementById('prevWeek').onclick = () => { currentWeekStart.setDate(currentWeekStart.getDate() - 7); renderUI(); };
         document.getElementById('nextWeek').onclick = () => { currentWeekStart.setDate(currentWeekStart.getDate() + 7); renderUI(); };
-        function changeDay(offset) { let c = new Date(activeKey); c.setDate(c.getDate() + offset); openDay(toKey(c)); }
-        function loadProfileData() { let p = agenda.profile; document.getElementById('profName').value = p.name || ""; document.getElementById('profPhone').value = p.phone || ""; document.getElementById('profEmail').value = p.email || ""; document.getElementById('profBio').value = p.bio || ""; if(p.img) document.getElementById('profImg').src = p.img; }
-        function saveProfile() { agenda.profile = { name: document.getElementById('profName').value, phone: document.getElementById('profPhone').value, email: document.getElementById('profEmail').value, bio: document.getElementById('profBio').value, img: document.getElementById('profImg').src }; saveData(); alert("Kaydedildi!"); }
+        
+        function loadProfileData() { 
+            let p = agenda.profile; 
+            document.getElementById('profName').value = p.name || ""; 
+            document.getElementById('profPhone').value = p.phone || ""; 
+            document.getElementById('pageFormat').value = p.pageFormat || "f-lined";
+            if(agenda.user) document.getElementById('profEmail').value = agenda.user.email; 
+            if(p.img) document.getElementById('profImg').src = p.img; 
+        }
+        function saveProfile() { 
+            agenda.profile = { 
+                name: document.getElementById('profName').value, 
+                phone: document.getElementById('profPhone').value, 
+                img: document.getElementById('profImg').src,
+                pageFormat: document.getElementById('pageFormat').value
+            }; 
+            saveData(); renderUI(); alert("Kaydedildi!"); 
+        }
         function loadProfilePic(e) { const r = new FileReader(); r.onload = () => { document.getElementById('profImg').src = r.result; }; r.readAsDataURL(e.target.files[0]); }
-        function handleLogout() { if(confirm("Çıkış?")) location.reload(); }
+        function handleLogout() { if(confirm("Çıkış?")) { agenda.user = null; saveData(); location.reload(); } }
     </script>
 </body>
 </html>
